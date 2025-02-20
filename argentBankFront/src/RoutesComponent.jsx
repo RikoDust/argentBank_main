@@ -1,7 +1,7 @@
 import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
 
 // COMPONENTS
-
+import Footer from "./components/Footer/Footer";
 
 
 // PAGES
@@ -18,7 +18,7 @@ function RoutesComponent() {
             <Routes>
                 <Route />
             </Routes>
-            
+            <Footer />
         </Router>
     );
 }
