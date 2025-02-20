@@ -5,7 +5,7 @@ import Footer from "./components/Footer/Footer";
 
 
 // PAGES
-
+import Home from "./pages/home";
 
 
 
@@ -16,7 +16,7 @@ function RoutesComponent() {
         <Router>
                 
             <Routes>
-                <Route />
+            <Route path="/" element={<Home />} />
             </Routes>
             <Footer />
         </Router>
