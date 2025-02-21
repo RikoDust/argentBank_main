@@ -1,0 +1,46 @@
+.error404 {
+  height: 650px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 7rem;
+}
+.error404 .error-title {
+  color: #00bc77;
+  font-size: 15rem;
+  margin-top: 5rem;
+  margin-bottom: 1.2rem;
+}
+.error404 .error-text {
+  color: #085b37;
+  font-size: 2.2rem;
+  margin-bottom: 6rem;
+}
+.error404 .back-home {
+  text-decoration: underline;
+  color: #085b37;
+  font-size: 18px;
+}
+
+/* Media Query "mobile"  (720px ou moins) */
+@media (max-width: 720px) {
+  .error404 {
+    margin-bottom: 7rem;
+  }
+  .error404 .error-title {
+    font-size: 8rem;
+    margin-top: 5rem;
+    margin-bottom: 3rem;
+  }
+  .error404 .error-text {
+    font-size: 1.5rem;
+    margin-bottom: 7rem;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+  .error404 .back-home {
+    font-size: 18px;
+  }
+}

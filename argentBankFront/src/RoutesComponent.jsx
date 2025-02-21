@@ -8,8 +8,7 @@ import Header from "./components/Header/Header";
 // PAGES
 import Home from "./pages/home";
 import SignIn from "./pages/signIn";
-
-
+import NotFound from "./pages/notFound";
 
 
 
@@ -20,6 +19,8 @@ function RoutesComponent() {
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/sign-in" element={<SignIn />} />
+
+                    <Route path="*" element={<NotFound />} />
                 </Routes>
             <Footer />
         </Router>
