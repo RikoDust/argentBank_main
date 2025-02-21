@@ -2,10 +2,12 @@ import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
 
 // COMPONENTS
 import Footer from "./components/Footer/Footer";
+import Header from "./components/Header/Header";
 
 
 // PAGES
 import Home from "./pages/home";
+import SignIn from "./pages/signIn";
 
 
 
@@ -14,10 +16,11 @@ import Home from "./pages/home";
 function RoutesComponent() {
     return(
         <Router>
-                
-            <Routes>
-            <Route path="/" element={<Home />} />
-            </Routes>
+            <Header />
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/sign-in" element={<SignIn />} />
+                </Routes>
             <Footer />
         </Router>
     );
