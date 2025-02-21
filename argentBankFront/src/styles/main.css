@@ -19,6 +19,9 @@ body {
 
 .bg-dark {
   background-color: #12002b;
+  padding-top: 40px;
+  height: 730px;
+  width: 100%;
 }
 
 
