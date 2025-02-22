@@ -9,6 +9,7 @@ import Header from "./components/Header/Header";
 import Home from "./pages/home";
 import SignIn from "./pages/signIn";
 import NotFound from "./pages/notFound";
+import User from "./pages/user";
 
 
 
@@ -19,7 +20,7 @@ function RoutesComponent() {
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/sign-in" element={<SignIn />} />
-
+                    <Route path="/user" element={<User />} />
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             <Footer />
