@@ -1,17 +1,36 @@
 // USER-CONTENT_COMPONENT
 
-
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../../Redux/userSlice";
+import { useNavigate } from "react-router-dom";
 import "./UserContent.scss";
 
 
 
+
 const UserContent = () => {
+    const user = useSelector((state) => state.user.user);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+  
+    const handleLogout = () => {
+      dispatch(logout());
+      navigate("/sign-in"); // Redirection après déconnexion
+    };
+
     return (
         <div className="bg-dark">
             <div className="header">
-                <h1>Welcome back<br />Tony Jarvis!</h1>
+            <h1>Welcome back<br />{user?.email || "User"}!</h1> 
                 <button className="edit-button">Edit Name</button>
             </div>
+
+
+            <div> 
+            <button onClick={handleLogout} className="logout-button">Logout</button>
+            </div>
+
+
             <h2 className="sr-only">Accounts</h2>
             <section className="account">
                 <div className="account-content-wrapper">
