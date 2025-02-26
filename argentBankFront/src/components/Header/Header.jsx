@@ -1,13 +1,26 @@
 // HEADER_COMPONENT
 
+
 import "./Header.scss";
-
 import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../../Redux/userSlice"; // Action de déconnexion
 
 
 
-const Header = ({ isAuthenticated, username, onLogout }) => {
+const Header = () => {
+  const dispatch = useDispatch();
+  
+  // Récupère les infos de connexion depuis Redux
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+
+  // Fonction pour gérer la déconnexion
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+
+
+
   return (
     <nav className="main-nav">
       <Link className="main-nav-logo" to="/">
@@ -15,16 +28,13 @@ const Header = ({ isAuthenticated, username, onLogout }) => {
         <h1 className="sr-only">Argent Bank</h1>
       </Link>
       <div>
-        {isAuthenticated ? (
-          <>
-            <Link className="main-nav-item" to="/user">
-              <i className="fa fa-user-circle"></i> {username}
-            </Link>
-            <button className="main-nav-item" onClick={onLogout} style={{ background: "none", border: "none", cursor: "pointer" }}>
-              <i className="fa fa-sign-out"></i> Sign Out
-            </button>
-          </>
+        {isLoggedIn ? (
+          // Si l'utilisateur est connecté, affiche le bouton Sign Out
+          <button className="main-nav-item" onClick={handleLogout} style={{ background: "none", border: "none", cursor: "pointer" }}>
+            <i className="fa-solid fa-right-from-bracket"></i> Sign Out
+          </button>
         ) : (
+          // Sinon, affiche le bouton Sign In
           <Link className="main-nav-item" to="/sign-in">
             <i className="fa fa-user-circle"></i> Sign In
           </Link>
@@ -36,17 +46,6 @@ const Header = ({ isAuthenticated, username, onLogout }) => {
 
 
 
-// Validation des props
-Header.propTypes = {
-    isAuthenticated: PropTypes.bool.isRequired,
-    username: PropTypes.string,
-    onLogout: PropTypes.func.isRequired,
-  };
-  
-  // Valeurs par défaut (si "username" n'est pas fourni)
-  Header.defaultProps = {
-    username: "",
-  };
 
 
 
