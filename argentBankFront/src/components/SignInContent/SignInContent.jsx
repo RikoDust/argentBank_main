@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../../Redux/userSlice";
+import { loginUser, fetchUserProfile } from "../../Redux/userSlice";
 import { useNavigate } from "react-router-dom";
 import "./SignInContent.scss";
 
@@ -20,9 +20,12 @@ const SignInContent = () => {
     const result = await dispatch(loginUser({ email, password }));
 
     if (result.meta.requestStatus === "fulfilled") {
+      await dispatch(fetchUserProfile()); // Récupération des infos utilisateur
       navigate("/user"); // Redirection si connexion réussie
     }
   };
+
+
 
   return (
     <div className="bg-dark">

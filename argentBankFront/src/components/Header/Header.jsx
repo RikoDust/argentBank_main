@@ -8,11 +8,13 @@ import { logout } from "../../Redux/userSlice"; // Action de déconnexion
 
 
 
+
 const Header = () => {
   const dispatch = useDispatch();
-  
-  // Récupère les infos de connexion depuis Redux
+
+  // Récupère les infos de connexion et le userName depuis Redux
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const userName = useSelector((state) => state.user.user?.userName); // Récupère le userName
 
   // Fonction pour gérer la déconnexion
   const handleLogout = () => {
@@ -29,10 +31,15 @@ const Header = () => {
       </Link>
       <div>
         {isLoggedIn ? (
-          // Si l'utilisateur est connecté, affiche le bouton Sign Out
-          <button className="main-nav-item" onClick={handleLogout} style={{ background: "none", border: "none", cursor: "pointer" }}>
-            <i className="fa-solid fa-right-from-bracket"></i> Sign Out
-          </button>
+          // Si l'utilisateur est connecté, affiche son userName + bouton Sign Out
+          <>
+            <span className="main-nav-user">
+              <i className="fa fa-user-circle"></i> {userName}
+            </span>
+            <button className="main-nav-item" onClick={handleLogout} style={{ background: "none", border: "none", cursor: "pointer" }}>
+              <i className="fa-solid fa-right-from-bracket"></i> Sign Out
+            </button>
+          </>
         ) : (
           // Sinon, affiche le bouton Sign In
           <Link className="main-nav-item" to="/sign-in">
