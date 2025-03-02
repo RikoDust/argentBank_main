@@ -2,7 +2,7 @@
 
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-
+import { updateUserName } from "./userEditSlice";
 
 
 // Action asynchrone pour gérer la connexion
@@ -40,7 +40,7 @@ export const fetchUserProfile = createAsyncThunk("user/fetchUserProfile", async 
 
   try {
     const response = await fetch("http://localhost:3001/api/v1/user/profile", {
-      method: "GET", 
+      method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -59,7 +59,6 @@ export const fetchUserProfile = createAsyncThunk("user/fetchUserProfile", async 
     return rejectWithValue(error.message);
   }
 });
-
 
 
 
@@ -95,6 +94,13 @@ const userSlice = createSlice({
       // Cas où la connexion échoue
       .addCase(loginUser.rejected, (state, action) => {
         state.error = action.payload;
+      })
+
+      // ✅ Met à jour le userName après modification
+      .addCase(updateUserName.fulfilled, (state, action) => {
+        if (state.user) {
+          state.user.userName = action.payload.userName;
+        }
       });
   },
 });

@@ -50,7 +50,7 @@ const userEditSlice = createSlice({
       .addCase(updateUserName.fulfilled, (state) => {
         state.isEditing = false; // Ferme le mode édition après mise à jour
       })
-      .addCase(updateUserName.rejected, (state, action) => {
+      .addCase(updateUserName.rejected, ( action) => {
         console.error("Erreur lors de la mise à jour du userName :", action.payload);
       });
   },
