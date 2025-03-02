@@ -1,0 +1,53 @@
+.user-edit {
+  background-color: white;
+  padding: 15px;
+  width: 330px;
+  max-width: 100%;
+  margin: auto;
+  margin-bottom: 2rem;
+}
+
+.user-edit h2 {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+.input-group {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.user-edit input {
+  margin-left: 5px;
+  max-width: 6rem;
+  font-size: 1rem;
+  border-radius: 5px;
+}
+
+.disabled {
+  background: #f0f0f0;
+  color: #888;
+  cursor: not-allowed;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.buttons button {
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  padding: 10px;
+  width: 8rem;
+  cursor: pointer;
+  background-color: #00bc77;
+  color: white;
+}
