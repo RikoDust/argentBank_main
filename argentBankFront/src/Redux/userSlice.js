@@ -5,6 +5,11 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { updateUserName } from "./userEditSlice";
 
 
+
+// Vérifie si un token est déjà stocké dans localStorage
+const initialToken = localStorage.getItem("token");
+
+
 // Action asynchrone pour gérer la connexion
 export const loginUser = createAsyncThunk("user/loginUser", async (credentials, { rejectWithValue }) => {
   try {
@@ -22,7 +27,7 @@ export const loginUser = createAsyncThunk("user/loginUser", async (credentials, 
     }
 
     // Vérifier si le token est dans `data.body.token` ou à la racine de `data`
-    const token = data.token || data.body?.token;  // Ajouter cette vérification
+    const token = data.token || data.body?.token;  
     // console.log("Token extrait :", token);  // Vérifier que le token est correct
 
     return token; // On retourne le token pour qu'il soit stocké dans Redux
@@ -35,7 +40,7 @@ export const loginUser = createAsyncThunk("user/loginUser", async (credentials, 
 
 // Action asynchrone pour récupérer le profil utilisateur
 export const fetchUserProfile = createAsyncThunk("user/fetchUserProfile", async (_, { getState, rejectWithValue }) => {
-  const token = getState().user.user?.token;
+  const token = getState().user.user?.token || localStorage.getItem("token"); // Récupère le token depuis Redux ou localStorage
   if (!token) return rejectWithValue("No token available");
 
   try {
@@ -66,12 +71,14 @@ export const fetchUserProfile = createAsyncThunk("user/fetchUserProfile", async 
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    user: null,
-    isLoggedIn: false, // Utilisateur connecté ?
+    user: initialToken ? { token: initialToken } : null, // Charge le token depuis localStorage
+    isLoggedIn: !!initialToken, // Vérifie si un utilisateur est connecté
     error: null,
   },
   reducers: {
     logout: (state) => {
+      // console.log("Déconnexion utilisateur, suppression du token.");
+      localStorage.removeItem("token"); // Supprime le token du stockage
       state.user = null; // Supprime les informations utilisateur
       state.isLoggedIn = false; // Marque l'utilisateur déconnecté
       state.error = null;
@@ -84,6 +91,7 @@ const userSlice = createSlice({
         state.user = { token: action.payload }; // Stocke le token reçu
         state.isLoggedIn = true; // Marque l'utilisateur comme connecté
         state.error = null;
+        localStorage.setItem("token", action.payload); // Stocke le token dans localStorage
       })
 
       // Ajoute les infos du profil
@@ -93,6 +101,7 @@ const userSlice = createSlice({
 
       // Cas où la connexion échoue
       .addCase(loginUser.rejected, (state, action) => {
+        // console.log("❌ Échec de connexion :", action.payload);
         state.error = action.payload;
       })
 
@@ -110,3 +119,4 @@ const userSlice = createSlice({
 
 export const { logout } = userSlice.actions;
 export default userSlice.reducer;
+

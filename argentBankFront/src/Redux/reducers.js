@@ -3,7 +3,7 @@
 
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./userSlice";
-import userEditReducer from "./userEditSlice"; // Import du reducer
+import userEditReducer from "./userEditSlice";
 
 const store = configureStore({
   reducer: {
