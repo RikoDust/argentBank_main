@@ -1,8 +1,14 @@
+// SIGN-IN-CONTENT_COMPONENT
+
+
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser, fetchUserProfile } from "../../Redux/userSlice";
 import { useNavigate } from "react-router-dom";
+
 import "./SignInContent.scss";
+
+
 
 const SignInContent = () => {
   const [email, setEmail] = useState("");
@@ -15,12 +21,11 @@ const SignInContent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = await dispatch(loginUser({ email, password }));
+
+    // Dispatch avec "rememberMe"
+    const result = await dispatch(loginUser({ email, password, rememberMe }));
 
     if (result.meta.requestStatus === "fulfilled") {
-      if (rememberMe) {
-        localStorage.setItem("token", result.payload); // Stocke le token
-      }
       await dispatch(fetchUserProfile()); // Récupère les infos utilisateur
       navigate("/user"); // Redirection vers l'espace utilisateur
     }

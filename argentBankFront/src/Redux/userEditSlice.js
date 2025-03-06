@@ -57,7 +57,7 @@ const userEditSlice = createSlice({
 });
 
 // Vérification : Affiche l'état initial dans la console
-// console.log("✅ Initial userEdit state:", initialState);
+// console.log("Initial userEdit state:", initialState);
 
 export const { toggleEditMode } = userEditSlice.actions;
 export default userEditSlice.reducer;

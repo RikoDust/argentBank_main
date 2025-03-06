@@ -1,71 +1,71 @@
 // USER_SLICE
 
 
+// USER_SLICE
+
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { updateUserName } from "./userEditSlice";
-
-
 
 // Vérifie si un token est déjà stocké dans localStorage
 const initialToken = localStorage.getItem("token");
 
-
 // Action asynchrone pour gérer la connexion
-export const loginUser = createAsyncThunk("user/loginUser", async (credentials, { rejectWithValue }) => {
-  try {
-    const response = await fetch("http://localhost:3001/api/v1/user/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(credentials), // Convertit les identifiants en JSON
-    });
+export const loginUser = createAsyncThunk(
+  "user/loginUser",
+  async ({ email, password, rememberMe }, { rejectWithValue }) => {
+    try {
+      const response = await fetch("http://localhost:3001/api/v1/user/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }), // Convertit les identifiants en JSON
+      });
 
-    const data = await response.json(); // Convertit la réponse en JSON
-    // console.log("Réponse après login :", data); // Vérification complète de la réponse
+      const data = await response.json(); // Convertit la réponse en JSON
+      // console.log("Réponse après login :", data); // Vérification complète de la réponse
 
-    if (!response.ok) {
-      throw new Error("Invalid credentials"); // Erreur si les identifiants sont incorrects
+      if (!response.ok) {
+        throw new Error("Invalid credentials"); // Erreur si les identifiants sont incorrects
+      }
+
+      // Vérifier si le token est dans `data.body.token` ou à la racine de `data`
+      const token = data.token || data.body?.token;
+      // console.log("Token extrait :", token);  // Vérifier que le token est correct
+
+      return { token, rememberMe }; // On retourne le token et l'option Remember Me
+    } catch (error) {
+      return rejectWithValue(error.message); // En cas d'erreur, retourne le message d'erreur
     }
-
-    // Vérifier si le token est dans `data.body.token` ou à la racine de `data`
-    const token = data.token || data.body?.token;  
-    // console.log("Token extrait :", token);  // Vérifier que le token est correct
-
-    return token; // On retourne le token pour qu'il soit stocké dans Redux
-  } catch (error) {
-    return rejectWithValue(error.message); // En cas d'erreur, retourne le message d'erreur
   }
-});
-
-
+);
 
 // Action asynchrone pour récupérer le profil utilisateur
-export const fetchUserProfile = createAsyncThunk("user/fetchUserProfile", async (_, { getState, rejectWithValue }) => {
-  const token = getState().user.user?.token || localStorage.getItem("token"); // Récupère le token depuis Redux ou localStorage
-  if (!token) return rejectWithValue("No token available");
+export const fetchUserProfile = createAsyncThunk(
+  "user/fetchUserProfile",
+  async (_, { getState, rejectWithValue }) => {
+    const token = getState().user.user?.token || localStorage.getItem("token"); // Récupère le token depuis Redux ou localStorage
+    if (!token) return rejectWithValue("No token available");
 
-  try {
-    const response = await fetch("http://localhost:3001/api/v1/user/profile", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    try {
+      const response = await fetch("http://localhost:3001/api/v1/user/profile", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-    // console.log("Réponse reçue :", response);
+      // console.log("Réponse reçue :", response);
 
+      if (!response.ok) {
+        throw new Error("Failed to fetch profile");
+      }
 
-    if (!response.ok) {
-      throw new Error("Failed to fetch profile");
+      const data = await response.json();
+      return data.body; // On récupère les données utilisateur
+    } catch (error) {
+      return rejectWithValue(error.message);
     }
-
-    const data = await response.json();
-    return data.body; // On récupère les données utilisateur
-  } catch (error) {
-    return rejectWithValue(error.message);
   }
-});
-
-
+);
 
 // Création du slice Redux pour gérer l'état utilisateur
 const userSlice = createSlice({
@@ -87,11 +87,18 @@ const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(loginUser.fulfilled, (state, action) => {
-        // console.log("✅ Connexion réussie, token reçu :", action.payload);
-        state.user = { token: action.payload }; // Stocke le token reçu
+        // console.log("✅ Connexion réussie, token reçu :", action.payload.token);
+        state.user = { token: action.payload.token }; // Stocke le token reçu
         state.isLoggedIn = true; // Marque l'utilisateur comme connecté
         state.error = null;
-        localStorage.setItem("token", action.payload); // Stocke le token dans localStorage
+
+        // Stocke le token uniquement si "Remember Me" est coché
+        if (action.payload.rememberMe) {
+          localStorage.setItem("token", action.payload.token);
+          // console.log("🔒 Token enregistré dans localStorage (Remember Me activé)");
+        } else {
+          // console.log("🔓 Token NON enregistré dans localStorage (Remember Me désactivé)");
+        }
       })
 
       // Ajoute les infos du profil
@@ -113,9 +120,6 @@ const userSlice = createSlice({
       });
   },
 });
-
-
-
 
 export const { logout } = userSlice.actions;
 export default userSlice.reducer;
