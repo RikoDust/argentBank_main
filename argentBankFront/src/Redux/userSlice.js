@@ -42,14 +42,14 @@ export const loginUser = createAsyncThunk(
 export const fetchUserProfile = createAsyncThunk(
   "user/fetchUserProfile",
   async (_, { getState, rejectWithValue }) => {
-    const token = getState().user.user?.token || localStorage.getItem("token"); // Récupère le token depuis Redux ou localStorage
+    const token = getState().user.user?.token || localStorage.getItem("token"); // Récupère le token depuis localStorage
     if (!token) return rejectWithValue("No token available");
 
     try {
       const response = await fetch("http://localhost:3001/api/v1/user/profile", {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`, // envoi le token recupérer lors de la connexion pour avoir les informations utilisateur
         },
       });
 
@@ -87,7 +87,7 @@ const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(loginUser.fulfilled, (state, action) => {
-        // console.log("✅ Connexion réussie, token reçu :", action.payload.token);
+        // console.log("Connexion réussie, token reçu :", action.payload.token)
         state.user = { token: action.payload.token }; // Stocke le token reçu
         state.isLoggedIn = true; // Marque l'utilisateur comme connecté
         state.error = null;
@@ -95,9 +95,9 @@ const userSlice = createSlice({
         // Stocke le token uniquement si "Remember Me" est coché
         if (action.payload.rememberMe) {
           localStorage.setItem("token", action.payload.token);
-          // console.log("🔒 Token enregistré dans localStorage (Remember Me activé)");
+          // console.log("Token enregistré dans localStorage (Remember Me activé)")
         } else {
-          // console.log("🔓 Token NON enregistré dans localStorage (Remember Me désactivé)");
+          // console.log("Token NON enregistré dans localStorage (Remember Me désactivé)")
         }
       })
 
@@ -108,11 +108,11 @@ const userSlice = createSlice({
 
       // Cas où la connexion échoue
       .addCase(loginUser.rejected, (state, action) => {
-        // console.log("❌ Échec de connexion :", action.payload);
+        // console.log("Échec de connexion :", action.payload)
         state.error = action.payload;
       })
 
-      // ✅ Met à jour le userName après modification
+      // Met à jour le userName après modification
       .addCase(updateUserName.fulfilled, (state, action) => {
         if (state.user) {
           state.user.userName = action.payload.userName;
